@@ -1,5 +1,8 @@
 {
   "name": "api-gateway-repuesto-hogar",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@vercel/edge": "^1.2.1"
+  }
 }
