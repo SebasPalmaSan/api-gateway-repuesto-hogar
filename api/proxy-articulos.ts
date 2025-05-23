@@ -9,12 +9,29 @@ export const config = {
 };
 
 export default async function handler(req: Request): Promise<Response> {
-  const { search } = new URL(req.url);
-  const apiUrl = `https://api.hogarshops.com/articulos${search}`;
+  // Manejo de preflight OPTIONS
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type,Authorization",
+      },
+    });
+  }
+
+  const url = new URL(req.url);
+  // Extrae el path dinámico después de /api/proxy-articulos
+  const apiPath = url.pathname.replace(/^\/api\/proxy-articulos/, "");
+  const apiUrl = `https://api.hogarshops.com/articulos${apiPath}${url.search}`;
   const accessToken = process.env.ACCESS_TOKEN_PRIVADO;
 
   if (!accessToken) {
-    return new Response(JSON.stringify({ error: "Access token not set" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Access token not set" }), {
+      status: 500,
+      headers: { "Access-Control-Allow-Origin": "*" },
+    });
   }
 
   const apiRes = await fetch(apiUrl, {
@@ -30,6 +47,7 @@ export default async function handler(req: Request): Promise<Response> {
     status: apiRes.status,
     headers: {
       'Content-Type': contentType,
+      'Access-Control-Allow-Origin': '*',
     },
   });
 }
