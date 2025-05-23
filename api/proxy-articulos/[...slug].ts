@@ -24,9 +24,10 @@ export default async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url);
   // Extrae el path dinámico después de /api/proxy-articulos
   const apiPath = url.pathname.replace(/^\/api\/proxy-articulos/, "");
-  const apiUrl = `https://api.hogarshops.com/articulos${apiPath}${url.search}`;
+  // Construye la URL base de la API real
+  const apiUrl = new URL(`https://api.hogarshops.com/articulos${apiPath}${url.search}`);
   const accessToken = process.env.ACCESS_TOKEN_PRIVADO;
-  console.log('TOKEN:', process.env.ACCESS_TOKEN_PRIVADO);
+  console.log('TOKEN:', accessToken);
 
   if (!accessToken) {
     return new Response(JSON.stringify({ error: "Access token not set" }), {
@@ -35,11 +36,10 @@ export default async function handler(req: Request): Promise<Response> {
     });
   }
 
-  const apiRes = await fetch(apiUrl, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  // Agrega el token como parámetro de consulta
+  apiUrl.searchParams.set('access_token', accessToken);
+
+  const apiRes = await fetch(apiUrl.toString());
 
   const contentType = apiRes.headers.get('content-type') || 'application/json';
   const data = await apiRes.text();
