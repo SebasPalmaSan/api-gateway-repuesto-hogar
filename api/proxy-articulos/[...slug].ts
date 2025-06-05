@@ -22,14 +22,12 @@ export default async function handler(req: Request): Promise<Response> {
 
   try {
     const url = new URL(req.url);
-    // Extrae el slug correctamente
     let slug = url.pathname.replace(/^\/api\/proxy-articulos\/?/, "");
     let apiPath = "";
     if (!slug || slug === "/") {
       // Ruta base: /api/proxy-articulos
       apiPath = "";
     } else {
-      // Rutas anidadas: /api/proxy-articulos/123/imagenes
       const parts = slug.split("/").filter(Boolean);
       if (parts.length > 0 && /^\d+$/.test(parts[0])) {
         parts[0] = parts[0].padStart(7, "0");
@@ -39,8 +37,6 @@ export default async function handler(req: Request): Promise<Response> {
 
     const apiUrl = new URL(`https://api.hogarshops.com/articulos${apiPath}${url.search}`);
     const accessToken = process.env.ACCESS_TOKEN_PRIVADO;
-
-    console.log("API URL:", apiUrl.toString());
 
     if (!accessToken) {
       return new Response(JSON.stringify({ error: "Access token not set" }), {
