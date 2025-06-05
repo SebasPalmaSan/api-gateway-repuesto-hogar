@@ -31,6 +31,8 @@ export default async function handler(req: Request): Promise<Response> {
     const apiUrl = new URL(`https://api.hogarshops.com/articulos${apiPath}${url.search}`);
     const accessToken = process.env.ACCESS_TOKEN_PRIVADO;
 
+    console.log("API URL:", apiUrl.toString());
+
     if (!accessToken) {
       return new Response(JSON.stringify({ error: "Access token not set" }), {
         status: 500,
