@@ -22,12 +22,21 @@ export default async function handler(req: Request): Promise<Response> {
 
   try {
     const url = new URL(req.url);
-    const slug = url.pathname.replace(/^\/api\/proxy-articulos\//, "").split("/");
-    // Si la ruta es /43470/imagenes, slug = ['43470', 'imagenes']
-    if (slug.length > 0 && /^\d+$/.test(slug[0])) {
-      slug[0] = slug[0].padStart(7, "0");
+    // Extrae el slug correctamente
+    let slug = url.pathname.replace(/^\/api\/proxy-articulos\/?/, "");
+    let apiPath = "";
+    if (!slug || slug === "/") {
+      // Ruta base: /api/proxy-articulos
+      apiPath = "";
+    } else {
+      // Rutas anidadas: /api/proxy-articulos/123/imagenes
+      const parts = slug.split("/").filter(Boolean);
+      if (parts.length > 0 && /^\d+$/.test(parts[0])) {
+        parts[0] = parts[0].padStart(7, "0");
+      }
+      apiPath = "/" + parts.join("/");
     }
-    const apiPath = "/" + slug.join("/");
+
     const apiUrl = new URL(`https://api.hogarshops.com/articulos${apiPath}${url.search}`);
     const accessToken = process.env.ACCESS_TOKEN_PRIVADO;
 
