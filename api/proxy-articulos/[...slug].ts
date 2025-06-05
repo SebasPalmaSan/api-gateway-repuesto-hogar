@@ -25,8 +25,7 @@ export default async function handler(req: Request): Promise<Response> {
     const slug = url.pathname.replace(/^\/api\/proxy-articulos\//, "").split("/");
     // Si la ruta es /43470/imagenes, slug = ['43470', 'imagenes']
     if (slug.length > 0 && /^\d+$/.test(slug[0])) {
-      // Normaliza el id a 5 dígitos
-      slug[0] = slug[0].padStart(6, "0");
+      slug[0] = slug[0].padStart(7, "0");
     }
     const apiPath = "/" + slug.join("/");
     const apiUrl = new URL(`https://api.hogarshops.com/articulos${apiPath}${url.search}`);
