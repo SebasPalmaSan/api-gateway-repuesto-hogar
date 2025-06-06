@@ -58,6 +58,8 @@ export default async function handler(req) {
 
     apiUrl.searchParams.set('access_token', accessToken);
 
+    console.log("API URL final:", apiUrl.toString());
+    
     const apiRes = await fetch(apiUrl.toString());
     const contentType = apiRes.headers.get('content-type') || 'application/json';
     const data = await apiRes.text();
