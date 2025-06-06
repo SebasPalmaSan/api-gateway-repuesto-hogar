@@ -25,16 +25,19 @@ export default async function handler(req: Request): Promise<Response> {
     let slug = url.pathname.replace(/^\/api\/proxy-articulos\/?/, "");
     let apiPath = "";
     if (!slug || slug === "/") {
-      // Ruta base: /api/proxy-articulos
       apiPath = "";
     } else {
       const parts = slug.split("/").filter(Boolean);
-      if (parts.length > 0 && /^\d+$/.test(parts[0])) {
+      // Solo normalizá a 7 dígitos si NO es una ruta de imágenes
+      if (
+        parts.length > 0 &&
+        /^\d+$/.test(parts[0]) &&
+        !(parts.length > 1 && parts[1] === "imagenes")
+      ) {
         parts[0] = parts[0].padStart(7, "0");
       }
       apiPath = "/" + parts.join("/");
     }
-
     const apiUrl = new URL(`https://api.hogarshops.com/articulos${apiPath}${url.search}`);
     const accessToken = process.env.ACCESS_TOKEN_PRIVADO;
 
