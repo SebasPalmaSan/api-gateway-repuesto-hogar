@@ -9,6 +9,17 @@ export const config = {
 };
 
 export default async function handler(req: Request): Promise<Response> {
+  if (req.method !== "GET" && req.method !== "OPTIONS") {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type,Authorization",
+      },
+    });
+  }
+
   if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
@@ -28,7 +39,6 @@ export default async function handler(req: Request): Promise<Response> {
       apiPath = "";
     } else {
       const parts = slug.split("/").filter(Boolean);
-      // Solo normalizá si el primer segmento es numérico y tiene menos de 7 dígitos
       if (
         parts.length > 0 &&
         /^\d+$/.test(parts[0]) &&
