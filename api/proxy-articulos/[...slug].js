@@ -1,15 +1,10 @@
-declare const process: {
-  env: {
-    [key: string]: string | undefined;
-  };
-};
-
 export const config = {
   runtime: 'edge',
 };
 
-export default async function handler(req: Request): Promise<Response> {
+export default async function handler(req) {
   console.log("Handler ejecutado:", req.method, req.url);
+
   if (req.method !== "GET" && req.method !== "OPTIONS") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
