@@ -28,10 +28,11 @@ export default async function handler(req: Request): Promise<Response> {
       apiPath = "";
     } else {
       const parts = slug.split("/").filter(Boolean);
-      // Solo normalizá a 7 dígitos si NO es una ruta de imágenes
+      // Solo normalizá si el primer segmento es numérico y tiene menos de 7 dígitos
       if (
         parts.length > 0 &&
         /^\d+$/.test(parts[0]) &&
+        parts[0].length < 7 &&
         !(parts.length > 1 && parts[1] === "imagenes")
       ) {
         parts[0] = parts[0].padStart(7, "0");
