@@ -29,8 +29,9 @@ export default async function handler(req) {
 
   try {
     const url = new URL(req.url);
-    console.log("Pathname recibido:", url.pathname);
     let slug = url.pathname.replace(/^\/api\/proxy-articulos\/?/, "");
+    console.log("Pathname recibido:", url.pathname);
+    console.log("Slug extraído:", slug);
     let apiPath = "";
     if (!slug || slug === "/") {
       apiPath = "";
