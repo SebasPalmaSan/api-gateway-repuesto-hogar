@@ -9,6 +9,7 @@ export const config = {
 };
 
 export default async function handler(req: Request): Promise<Response> {
+  console.log("Handler ejecutado:", req.method, req.url);
   if (req.method !== "GET" && req.method !== "OPTIONS") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
@@ -33,6 +34,7 @@ export default async function handler(req: Request): Promise<Response> {
 
   try {
     const url = new URL(req.url);
+    console.log("Pathname recibido:", url.pathname);
     let slug = url.pathname.replace(/^\/api\/proxy-articulos\/?/, "");
     let apiPath = "";
     if (!slug || slug === "/") {
