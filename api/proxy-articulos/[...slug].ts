@@ -32,8 +32,7 @@ export default async function handler(req: Request): Promise<Response> {
       if (
         parts.length > 0 &&
         /^\d+$/.test(parts[0]) &&
-        parts[0].length < 7 &&
-        !(parts.length > 1 && parts[1] === "imagenes")
+        parts[0].length < 7
       ) {
         parts[0] = parts[0].padStart(7, "0");
       }
